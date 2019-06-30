@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="root">
+
+        <textarea id="input" v-model="messages"></textarea>
+        <!-- <br> -->
+        <!-- <p>{{messagesResult}}</p> -->
+        <p v-html="messagesResult"></p>
+        <!-- <p v-html="result"></p> -->
+
+    </div>
+
+
+    <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#root',
+            data: {
+                messages: '',
+                result: `<span style="color:red">There is a repeated separator | </span>`,
+            },
+
+            computed: {
+                messagesResult() {
+                    let color = 'black';
+                    let flag = true;
+                    let response = [];
+                    let messages = this.messages.split('|');
+                    // return messages[0];
+                    if (this.messages.length > 0) {
+                        for (let i in messages) {
+                            if (flag) {
+                                if ((messages[i].length == 0)) {
+                                    if (i == 0) {
+                                        color = 'orange';
+                                        response = `There is an unused separator at the begining`;
+                                    } else if (i == messages.length - 1) {
+                                        color = 'orange';
+                                        response = `There is an unused separator at the end`;
+                                    } else {
+                                        color = 'red';
+                                        response = `There is a repeated separator on message ${parseInt(i)+1}`;
+                                    }
+                                    flag = false;
+                                } else if (messages[i].indexOf('${name}') == -1) {
+                                    color = 'red';
+                                    response = `The message ${parseInt(i)+1} doesn't have the field ` +
+                                        '${name}';
+                                    flag = false;
+                                } else if (messages[i].indexOf('${link}') == -1) {
+                                    color = 'red';
+                                    response = `The message ${parseInt(i)+1} doesn't have the field ` +
+                                        '${link}';
+                                    flag = false;
+                                } else {
+                                    color = 'green';
+                                    response = `All ok with the ${parseInt(i)+1} messages`;
+                                }
+                            }
+                        }
+                    } else {
+                        color = 'orange';
+                        response = 'Nothing written';
+                    }
+                    return `<span style="color:${color}">${response}</span>`;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
